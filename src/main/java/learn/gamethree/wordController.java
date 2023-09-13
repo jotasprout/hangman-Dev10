@@ -1,10 +1,13 @@
 package learn.gamethree;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import learn.gamethree.HangmanGame;
+
+import java.util.List;
+
 @RestController
 public class wordController {
 
@@ -12,22 +15,28 @@ public class wordController {
 
 
 
-    @GetMapping("/")
-    public String startGame(){
-        return game.toString();
+    @PostMapping("/")
+    public ResponseEntity<List<String>> startGame(@RequestBody String secretWord){
+        if (secretWord.isBlank()){
+            return new ResponseEntity<>(List.of("Please include a secret word"), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(game.newGame(secretWord), HttpStatus.OK);
     }
 
     @GetMapping("/status")
-    public String getStatus(){
-        return game.toString();
+    public List<String> getStatus(){
+        return game.displayStatus("Current Game Status:");
     }
 
 
     // POST method to create a game
     // PUT method to submit a letter guess
     @PutMapping("/guess/{letter}")
-    public String guess(@PathVariable String letter){
-        return game.guessLetter(letter);
+    public ResponseEntity<List<String>> guess(@PathVariable String letter){
+        if (letter.isBlank()){
+            return new ResponseEntity<>(List.of("Please guess a letter"), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(game.guessLetter(letter), HttpStatus.OK);
     }
 
 
