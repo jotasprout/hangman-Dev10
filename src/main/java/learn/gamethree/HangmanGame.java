@@ -117,8 +117,8 @@ public class HangmanGame {
 
     public List<String> newGame(String secretWord) {
         this.guessesLeft = 7;
-        //you can send the word as an object, but it will f it up, so clear up the word to remove any garbage
-        this.secretWord = secretWord.replaceAll("\\s+", "").replaceAll("\\{", "").replaceAll("}", "").trim().toUpperCase();
+
+        this.secretWord = secretWord.trim().toUpperCase();
 
         //build a blank word
         buildBlankWord();
